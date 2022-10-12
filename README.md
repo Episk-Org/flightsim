@@ -1,5 +1,14 @@
 # flightsim
 
+![Screenshot](https://github.com/bruceme/flightsim/blob/main/Screenshot.jpg?raw=true)
+
+## Getting Started
+
+1. Install [OpenGL](https://www.opengl.org/) 
+1. Install [Rust](https://rustup.rs/)
+1. clone this repo, `cd flightsim`
+1. `cargo run`
+
 ## Features
 
 ### To be implemented

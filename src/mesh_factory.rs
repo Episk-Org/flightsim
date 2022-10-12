@@ -1,4 +1,5 @@
 use cgmath::{InnerSpace, Vector3};
+use image::GenericImageView;
 
 use crate::mesh::Mesh;
 
@@ -11,13 +12,14 @@ pub fn generate_surface(heightmap: &str, scale: f32, height_exaggeration: f32) -
     let image = image::open(heightmap).expect("Image not found");
     let image_width = image.width();
     let image_height = image.height();
-    let image_buf = crime::<4>(image.to_rgba8().into_raw());
 
     for y in 0..image_height {
         for x in 0..image_width {
+            let image::Rgba(data) = image.get_pixel(x, y);
+            
             vertices.push([
                 x as f32 * scale,
-                image_buf[(x + y * image_width) as usize][0] as f32 * height_exaggeration,
+                data[0] as f32 * height_exaggeration,
                 y as f32 * scale,
             ]);
             texies.push([
@@ -70,10 +72,4 @@ pub fn generate_surface(heightmap: &str, scale: f32, height_exaggeration: f32) -
     }
 
     Mesh::new(vertices, texies, normals, indices)
-}
-
-fn crime<const N: usize>(vec: Vec<u8>) -> Vec<[u8; N]> {
-    assert_eq!(vec.len() % N, 0);
-    let (ptr, len, cap) = vec.into_raw_parts();
-    unsafe { Vec::from_raw_parts(ptr as *mut [u8; N], len / N, cap / N) }
 }

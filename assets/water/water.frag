@@ -1,5 +1,6 @@
 #version 150
 
+in float visibility;
 in vec2 frag_tex;
 in vec3 frag_normal;
 in vec3 frag_position;
@@ -41,4 +42,6 @@ void main(void)
 	light += shade * water_color;
 
 	out_color = vec4(light/2, 0.8);
+
+	out_color = mix(vec4(0.5,0.5,0.5, 0.5), out_color, visibility);
 }

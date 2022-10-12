@@ -1,5 +1,6 @@
 #version 150
 
+in float visibility;
 in vec2 frag_tex;
 in vec3 frag_normal;
 out vec4 out_color;
@@ -16,4 +17,6 @@ void main(void)
     shade = clamp(shade, 0.1, 1);
 
 	out_color = vec4((texture(texture0, frag_tex) * shade).xyz, 1.0);
+
+	out_color = mix(vec4(0.5,0.5,0.5, 0.2), out_color, visibility);
 }

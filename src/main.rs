@@ -1,6 +1,3 @@
-#![feature(slice_as_chunks)]
-#![feature(vec_into_raw_parts)]
-
 use window_handler::WindowHandler;
 
 mod asset_manager;

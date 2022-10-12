@@ -1,7 +1,7 @@
 use cgmath::{Matrix4, Vector3};
 
 use crate::{
-    asset_manager, input_handler::KeyState, mesh::Mesh, model::Model, window_handler::GlContext, camera::Camera,
+    asset_manager, mesh::Mesh, model::Model, window_handler::GlContext, camera::Camera,
 };
 
 pub struct Entity {
