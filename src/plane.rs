@@ -1,4 +1,5 @@
 use cgmath::{Deg, EuclideanSpace, InnerSpace, Matrix4, Point3, Rad, Vector3, Vector4};
+use glow_glyph::{GlyphBrushBuilder, ab_glyph, Section, Text};
 
 use crate::{camera::Camera, input_handler::KeyState, model::Model, window_handler::GlContext};
 
@@ -33,7 +34,6 @@ impl Plane {
         Self {
             body,
             propeller,
-
             scale: 0.25,
             position,
 
@@ -115,7 +115,7 @@ impl Plane {
         //println!("{}", self.velocity.magnitude());
     }
 
-    pub fn render(&mut self, gl: &GlContext, time: &f32, camera: &mut Camera) {
+    pub fn render(&mut self, gl: &GlContext, time:&f32, camera: &mut Camera) {
         camera.perspective.fovy = Deg((70.0 + self.velocity.magnitude() * 40.0).clamp(70.0, 105.0)).into();
         let translation = Matrix4::from_translation(self.position);
 
@@ -138,6 +138,28 @@ impl Plane {
         camera.direction = self.forward;
         camera.up = self.up;
         camera.update_view();
+
+
+        let inconsolata = ab_glyph::FontArc::try_from_slice(include_bytes!(
+            "../assets/Inconsolata-Regular.ttf"
+        )).unwrap();
+
+        let mut glyph_brush = GlyphBrushBuilder::using_font(inconsolata).build(gl);
+
+        glyph_brush.queue(Section {
+            screen_position: (10.0, 10.0),
+            bounds: (800.0, 600.0),
+            text: vec![Text::default()
+                .with_text(&format!("fps:{}", (1.0/time) as u16))
+                .with_color([0.0, 0.0, 0.0, 1.0])
+                .with_scale(10.0)],
+            ..Section::default()
+        });
+
+        glyph_brush
+        .draw_queued(gl, 800, 600)
+        .expect("Draw queued");
+
         self.body.render(gl, matrix, time, camera);
 
         let offset = Matrix4::from_translation(Vector3::<f32>::new(0.0, -0.1935, 0.0));
